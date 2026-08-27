@@ -4,7 +4,6 @@ Public privacy policies for apps by Jackie Liao. This repository contains only s
 
 ## Published pages
 
-- [Policy directory](https://jackiewang1208.github.io/app-policies/)
 - [Arrow Trails privacy policy — English](https://jackiewang1208.github.io/app-policies/arrow-trails/privacy/)
 - [Arrow Trails 隐私政策 — 简体中文](https://jackiewang1208.github.io/app-policies/arrow-trails/privacy/zh/)
 
@@ -18,7 +17,9 @@ Run the static checks with `python3 tools/check_site.py`. To preview locally, ru
 
 ## Adding another app
 
-Create `<app-slug>/privacy/index.html` and, if needed, `<app-slug>/privacy/zh/index.html`. Add the app to the directory page. Reuse `styles.css`, but review each app's actual data practices independently. Keep public policy addresses stable.
+Create `<app-slug>/privacy/index.html` and, if needed, `<app-slug>/privacy/zh/index.html`. Reuse `styles.css`, but review each app's actual data practices independently. Keep public policy addresses stable.
+
+Policies are standalone: do not add links to the site root, a shared app directory, or other apps. The root page is a neutral notice and does not list apps. An app's policy may link to its own language versions and relevant external privacy statements. This navigation separation does not make the public repository or its files private.
 
 ## Content maintenance
 

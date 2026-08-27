@@ -52,11 +52,13 @@ for path in sorted(ROOT.rglob("*.html")):
     expected_url = expected_url.rstrip("/") + "/"
     assert page.canonical == expected_url, (path, page.canonical, expected_url)
     assert set(re.findall(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", source)) == {EMAIL}, path
-    assert "Jackie Liao" in source and "Arrow Trails" in source, path
+    assert "Jackie Liao" in source, path
+    if path != ROOT / "index.html":
+        assert "Arrow Trails" in source, path
     assert not re.search(r"\bTODO\b|\bTBD\b|to be supplied|开发者填写", source), path
     pages[path] = page
 
-assert len(pages) == 3, f"Expected directory + two policy pages, found {len(pages)}"
+assert len(pages) == 3, f"Expected neutral home + two policy pages, found {len(pages)}"
 for path, page in pages.items():
     for href in page.links:
         url = urlsplit(href)
@@ -78,6 +80,12 @@ for path, page in pages.items():
         if target.is_dir():
             target /= "index.html"
         assert target.is_file(), (path, "broken link", href)
+        if target.suffix == ".html":
+            if path == ROOT / "index.html":
+                assert target == path, (path, "homepage must not list apps", href)
+            else:
+                app_root = ROOT / path.relative_to(ROOT).parts[0]
+                assert target.is_relative_to(app_root), (path, "cross-app or directory link", href)
         if url.fragment:
             assert target in pages and unquote(url.fragment) in pages[target].ids, (path, href)
     print(f"PASS {path.relative_to(ROOT)}: language, metadata, contacts and links")
@@ -86,4 +94,4 @@ english = pages[ROOT / "arrow-trails/privacy/index.html"]
 chinese = pages[ROOT / "arrow-trails/privacy/zh/index.html"]
 assert english.ids == chinese.ids, "Policy sections differ across languages"
 assert (ROOT / ".nojekyll").is_file(), "Missing static publishing marker"
-print("PASS: 3 static pages; bilingual sections match; no scripts or forms")
+print("PASS: 3 static pages; bilingual sections match; no cross-app links, scripts or forms")
