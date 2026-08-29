@@ -58,7 +58,7 @@ for path in sorted(ROOT.rglob("*.html")):
     assert not re.search(r"\bTODO\b|\bTBD\b|to be supplied|开发者填写", source), path
     pages[path] = page
 
-assert len(pages) == 3, f"Expected neutral home + two policy pages, found {len(pages)}"
+assert len(pages) == 2, f"Expected neutral home + one English policy page, found {len(pages)}"
 for path, page in pages.items():
     for href in page.links:
         url = urlsplit(href)
@@ -91,7 +91,7 @@ for path, page in pages.items():
     print(f"PASS {path.relative_to(ROOT)}: language, metadata, contacts and links")
 
 english = pages[ROOT / "arrow-trails/privacy/index.html"]
-chinese = pages[ROOT / "arrow-trails/privacy/zh/index.html"]
-assert english.ids == chinese.ids, "Policy sections differ across languages"
+assert english.lang == "en", "Arrow Trails policy must be English"
+assert not any("/zh/" in href for href in english.links), "Removed Chinese policy is still linked"
 assert (ROOT / ".nojekyll").is_file(), "Missing static publishing marker"
-print("PASS: 3 static pages; bilingual sections match; no cross-app links, scripts or forms")
+print("PASS: 2 static pages; English-only policy; no cross-app links, scripts or forms")
